@@ -36,7 +36,7 @@
   .hero { display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 2; padding: 4rem 0 2rem; }
   .eyebrow { font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.6rem; display: flex; align-items: center; gap: 1rem; }
   .eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--accent); }
-  h1 { font-family: var(--display); font-size: clamp(6rem, 16vw, 14rem); line-height: 0.88; letter: spacing 1px;; color: var(--white); position: relative; }
+  h1 { font-family: var(--display); font-size: clamp(6rem, 16vw, 14rem); line-height: 0.88;letter-spacing: spacing 1px;; color: var(--white); position: relative; }
   h1 .stroke { -webkit-text-stroke: 1px var(--white); color: transparent; }
   h1 .glow-word { color: var(--accent); text-shadow: 0 0 60px rgba(212,168,83,0.45); }
   .tagline { margin-top: 2.5rem; font-family: var(--serif); font-style: italic; font-weight: 300; font-size: clamp(1rem, 2vw, 1.4rem); color: #ffffff; max-width: 520px; line-height: 1.6; }
@@ -602,8 +602,9 @@
     display: flex;
     gap: 30px;
     align-items: center;
-    justify-content: center;
+    justify-content:center;
     flex-wrap: wrap;
+  margin-top: -12px;
 }
 
 .btn-projects{
@@ -784,7 +785,7 @@
   /* CTA buttons */
   .hero-ctas { display: flex; gap: 1rem; margin-bottom: 2.8rem; flex-wrap: wrap; }
   .cta-primary {
-    display: inline-flex; align-items: center; gap: 0.55rem;
+    display: flex; align-items: center; gap: 0.55rem;
     font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
     color: var(--black); background: var(--accent);
     padding: 0.88rem 1.9rem; text-decoration: none;
@@ -969,7 +970,7 @@
   /* Hero accent text */
   .avail-dot { background: #22c55e !important; box-shadow: 0 0 8px rgba(34,197,94,0.5) !important; }
 
-  /* CTA buttons */
+  /* CTA s */
   .cta-primary {
     background: var(--accent) !important; color: var(--black) !important;
     border: none !important;
@@ -2943,7 +2944,7 @@ body::before {
 /* ── Stat numbers — solid crimson ── */
 .stat-num, .hstat-val em {
   color: #C41230 !important; -webkit-text-fill-color: #C41230 !important;
-  background: none !important; -webkit-background-clip: unset !important;
+  background: none !important; -background-clip: unset !important;
 }
 
 /* ── Avail dot ── */

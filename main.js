@@ -38,6 +38,7 @@
 
   function flipCard(id) {
     const card = document.getElementById(id);
+    if (!card) return;
     card.classList.toggle('active');
   }
   // touch: tap anywhere on card face flips it (except buttons/links)
@@ -86,6 +87,7 @@
   // ── Particles ──
   (function(){
     const container = document.getElementById('ctParticles');
+    if (!container) return;
     for (let i = 0; i < 18; i++) {
       const p = document.createElement('div');
       p.className = 'ct-p';
@@ -115,75 +117,83 @@
     document.querySelectorAll('.ct-left, .ct-right').forEach(el => io.observe(el));
   })();
 
-  // ── Ripple on submit button ──
-  document.getElementById('ctSubmit').addEventListener('click', function(e) {
-    const btn = this;
-    const r = document.createElement('span');
-    r.className = 'ct-ripple';
-    const rect = btn.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    r.style.cssText = `
-      width: ${size}px; height: ${size}px;
-      left: ${e.clientX - rect.left - size/2}px;
-      top: ${e.clientY - rect.top - size/2}px;
-    `;
-    btn.appendChild(r);
-    setTimeout(() => r.remove(), 700);
-  });
+  // ── Ripple on submit button + Form validation & submission ──
+  (function(){
+    const submitEl = document.getElementById('ctSubmit');
+    if (!submitEl) return;
 
-  // ── Form validation & submission ──
-  document.getElementById('ctSubmit').addEventListener('click', function() {
-    const name    = document.getElementById('ct-name');
-    const email   = document.getElementById('ct-email');
-    const message = document.getElementById('ct-message');
-    let valid = true;
+    submitEl.addEventListener('click', function(e) {
+      const btn = this;
+      const r = document.createElement('span');
+      r.className = 'ct-ripple';
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      r.style.cssText = `
+        width: ${size}px; height: ${size}px;
+        left: ${e.clientX - rect.left - size/2}px;
+        top: ${e.clientY - rect.top - size/2}px;
+      `;
+      btn.appendChild(r);
+      setTimeout(() => r.remove(), 700);
+    });
 
-    // reset errors
-    ['fName','fEmail','fMsg'].forEach(id => document.getElementById(id).classList.remove('error'));
+    submitEl.addEventListener('click', function() {
+      const name    = document.getElementById('ct-name');
+      const email   = document.getElementById('ct-email');
+      const message = document.getElementById('ct-message');
+      if (!name || !email || !message) return;
+      let valid = true;
 
-    if (!name.value.trim()) { document.getElementById('fName').classList.add('error'); valid = false; }
+      // reset errors
+      ['fName','fEmail','fMsg'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('error');
+      });
 
-    const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRx.test(email.value.trim())) { document.getElementById('fEmail').classList.add('error'); valid = false; }
+      if (!name.value.trim()) { const el=document.getElementById('fName'); if(el) el.classList.add('error'); valid = false; }
 
-    if (!message.value.trim()) { document.getElementById('fMsg').classList.add('error'); valid = false; }
+      const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRx.test(email.value.trim())) { const el=document.getElementById('fEmail'); if(el) el.classList.add('error'); valid = false; }
 
-    if (valid) {
-      const serviceId = 'service_916cx4w';
-      const templateId = 'template_nxx8mlt';
-      const templateParams = {
-        from_name: name.value.trim(),
-        from_email: email.value.trim(),
-        message: message.value.trim()
-      };
+      if (!message.value.trim()) { const el=document.getElementById('fMsg'); if(el) el.classList.add('error'); valid = false; }
 
-      const submitBtn = document.getElementById('ctSubmit');
-      submitBtn.disabled = true;
+      if (valid) {
+        const serviceId = 'service_916cx4w';
+        const templateId = 'template_nxx8mlt';
+        const templateParams = {
+          from_name: name.value.trim(),
+          from_email: email.value.trim(),
+          message: message.value.trim()
+        };
 
-      if (window.emailjs && typeof emailjs.send === 'function') {
-        emailjs.send(serviceId, templateId, templateParams)
-          .then(() => {
-            document.getElementById('ctFormInner').style.display = 'none';
-            document.getElementById('ctSuccess').classList.add('show');
-            submitBtn.disabled = false;
-            // clear fields
-            name.value = '';
-            email.value = '';
-            message.value = '';
-          })
-          .catch((err) => {
-            console.error('EmailJS send error:', err);
-            alert('Failed to send message — please try again later.');
-            submitBtn.disabled = false;
-          });
-      } else {
-        // Fallback: show success locally if EmailJS not available
-        document.getElementById('ctFormInner').style.display = 'none';
-        document.getElementById('ctSuccess').classList.add('show');
-        submitBtn.disabled = false;
+        const submitBtn = document.getElementById('ctSubmit');
+        if (submitBtn) submitBtn.disabled = true;
+
+        if (window.emailjs && typeof emailjs.send === 'function') {
+          emailjs.send(serviceId, templateId, templateParams)
+            .then(() => {
+              const formInner = document.getElementById('ctFormInner'); if(formInner) formInner.style.display = 'none';
+              const success = document.getElementById('ctSuccess'); if(success) success.classList.add('show');
+              if (submitBtn) submitBtn.disabled = false;
+              // clear fields
+              name.value = '';
+              email.value = '';
+              message.value = '';
+            })
+            .catch((err) => {
+              console.error('EmailJS send error:', err);
+              alert('Failed to send message — please try again later.');
+              if (submitBtn) submitBtn.disabled = false;
+            });
+        } else {
+          // Fallback: show success locally if EmailJS not available
+          const formInner = document.getElementById('ctFormInner'); if(formInner) formInner.style.display = 'none';
+          const success = document.getElementById('ctSuccess'); if(success) success.classList.add('show');
+          if (submitBtn) submitBtn.disabled = false;
+        }
       }
-    }
-  });
+    });
+  })();
   
 
 
@@ -192,25 +202,29 @@ const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
 
 function closeMenu() {
-  hamburger.classList.remove('open');
-  mobileMenu.classList.remove('open');
+  if (hamburger) hamburger.classList.remove('open');
+  if (mobileMenu) mobileMenu.classList.remove('open');
 }
 
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('open');
-  mobileMenu.classList.toggle('open');
-});
+if (hamburger && mobileMenu) {
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
 
-// close on outside click
-document.addEventListener('click', e => {
-  if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) closeMenu();
-});
+  // close on outside click
+  document.addEventListener('click', e => {
+    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) closeMenu();
+  });
+}
 
 // ── Navbar: add .scrolled class on scroll ──
 const topnav = document.getElementById('topnav');
-window.addEventListener('scroll', () => {
-  topnav.classList.toggle('scrolled', window.scrollY > 40);
-}, { passive: true });
+if (topnav) {
+  window.addEventListener('scroll', () => {
+    topnav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+}
 
 // ── Navbar: active link highlight ──
 const allSections = document.querySelectorAll('section[id]');
