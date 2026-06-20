@@ -253,7 +253,7 @@ window.addEventListener('scroll', () => {
 
 /* Reveal on scroll */
 (function(){
-  const els = document.querySelectorAll('.section-label,.card,.svc-card,.proj-c,.about-kw,.footer-col,.stat-row');
+  const els = document.querySelectorAll('.section-label,.svc-card,.proj-c');
   els.forEach(el => {
     if(!el.classList.contains('reveal')){
       el.classList.add('reveal');
@@ -272,7 +272,7 @@ window.addEventListener('scroll', () => {
 
 /* Card Tilt */
 (function(){
-  document.querySelectorAll('.card,.svc-card,.proj-c').forEach(card=>{
+  document.querySelectorAll('.svc-card,.proj-c').forEach(card=>{
     card.addEventListener('mousemove', e=>{
       const r = card.getBoundingClientRect();
       const x = (e.clientX-r.left)/r.width-0.5;
@@ -289,7 +289,7 @@ window.addEventListener('scroll', () => {
 
 /* Magnetic Buttons */
 (function(){
-  document.querySelectorAll('.cta-primary,.cta-ghost,.nav-hire,.ct-submit').forEach(btn=>{
+  document.querySelectorAll('.nav-hire,.btn,.svc-cta-btn,.ct-submit').forEach(btn=>{
     btn.addEventListener('mouseenter', ()=>{ btn.style.transition='transform 0.1s ease'; });
     btn.addEventListener('mousemove', e=>{
       const r = btn.getBoundingClientRect();
